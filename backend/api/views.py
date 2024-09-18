@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .serializer import UserSerializer
+from .serializer import UserSerializer, NoteSerializer
 from rest_framework.permissions import IsAuthenticated,AllowAny
 
 
