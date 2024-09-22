@@ -1,5 +1,5 @@
 import {Navigate} from "react-router-dom"
-import {jwtdecode} from "jwt-decode"
+import {jwtDecode} from "jwt-decode"
 import api from "../api"
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants"
 import { useEffect, useState } from "react"
@@ -45,7 +45,7 @@ function ProtectedRoute({children}){
             return}
 
 
-            const decoded = jwtdecode(token)
+            const decoded = jwtDecode(token)
             const tokenExpiration = decoded.exp
             const now = Date.now() / 1000
             if (tokenExpiration < now) {  await refreshToken()}
