@@ -3,8 +3,9 @@ import api from '../api'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { ACCESS_TOKEN } from '../constants'
 import { REFRESH_TOKEN } from '../constants'
+import axios from 'axios'
 
-const Form = (route, method) => {
+const Form = ({route, method}) => {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -14,19 +15,28 @@ const Form = (route, method) => {
 
     const handleSubmit = async (formValue) => {
 
-
-        setLoading(true)
         formValue.preventDefault()
+        setLoading(true)
         try{
             const res = await api.post(route , {username, password})
             if (method === "login"){
-                localStorage.setItem(ACCESS_TOKEN, res.data.access)
-                localStorage.setItem(REFRESH_TOKEN,res.data.refresh)
-                navigate("/")
-            }else {navigate("/login")}
-        }catch(error){
+                localStorage.setItem(ACCESS_TOKEN, res.data.access);
+                localStorage.setItem(REFRESH_TOKEN,res.data.refresh);
+                <Navigate to="/login" />
+            }
 
-        }finally {setLoading(true)}
+            if (method === "register"){
+                navigate("/login")
+            }
+            else 
+            {
+                navigate("/login")}
+        }catch(error){
+                console.log(error)
+                if (axios.isAxiosError(error)){
+                    console.log(error)
+                }
+        }finally {setLoading(false)}
 
     }
 
@@ -35,19 +45,21 @@ const Form = (route, method) => {
         <div className='container text-center'>
             <div className='row'>
                 <div className='col'></div>
-                <div className='col'>
-                    <form action="" onSubmit={handleSubmit} className='form-container'>
-                        <h1>{method === "login" ? "Login" : "Register"}</h1>
+                <div className='col-10'>
 
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                            <input type="email" class="form-control"
+                
+                    <form action="" onSubmit={handleSubmit} className='form-container bg-secondary p-2'>
+                    <h1>{method === "login" ? "Login" : "Register"}</h1>
+
+                        <div class="mb-3 px-5">
+                            <label for="exampleFormControlInput1" class="form-label text-white">Email address</label>
+                            <input type="text" class="form-control"
                                 id="username" placeholder="name@example.com" value={username}
                                 onChange={(e) => { setUsername(e.target.value) }} />
                         </div>
 
-                        <div class="mb-3">
-                            <label for="exampleFormControlInput1" class="form-label">Password</label>
+                        <div class="mb-3 px-5">
+                            <label for="exampleFormControlInput1" class="form-label text-white">Password</label>
                             <input type="password" class="form-control" value={password} onChange={(e) => { setPassword(e.target.value) }}
                                 id="password" />
                         </div>
