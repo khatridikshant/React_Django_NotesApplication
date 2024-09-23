@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import api from "../api";
 
 export const Home = () => {
+  const [author, setAuthor] = useState("");
   const [notes, setNotes] = useState([]);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
 
   useEffect(() => {
     getNote();
-  });
+  }, []);
 
   const getNote = () => {
     api
@@ -28,21 +29,38 @@ export const Home = () => {
       .then((res) => {
         if (res.status === 204) alert("Note Deleted");
         else alert("Failed To Delete Note");
+        getNote();
       })
       .catch((error) => alert(error));
-
-    getNote();
   };
 
+  const token = localStorage.getItem('ACCESS_TOKEN')
+  const config = {
+    headers :{
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }
   const createNote = (e) => {
     e.preventDefault();
-    api.post("/api/notes/", { content, title }).then((response) => {
-      if (response.status === 201) {
-        alert("Note Created");
-      } else {
-        alert("Failed To Note Created");
+    api
+      .post("/api/notes/", { content, title })
+      .then((response) => {
+        if (response.status === 201) {
+          alert("Note Created");
+        } else {
+          alert("Failed To Note Created");
+        }
+      })
+      .catch((axioserror) => {
+        console.log(axioserror)
+        if (axioserror.response) {
+          alert(axioserror.message + 'It is response')
+        }
+        if (axioserror.request) { alert(axioserror.message + 'It is request')}
       }
-    });
+      
+    );
   };
 
   return (
@@ -73,9 +91,8 @@ export const Home = () => {
                 class="form-control"
                 id="title"
                 name="title"
-                onChange={(e) => setTitle(e.target.value) }
-                value = {title}
-                
+                onChange={(e) => setTitle(e.target.value)}
+                value={title}
               />
             </div>
             <div class="mb-3">
@@ -84,11 +101,16 @@ export const Home = () => {
               </label>
               <textarea
                 class="form-control"
+                onChange={(e) => setContent(e.target.value)}
+                value={content}
                 id="content"
+                name="content"
                 rows="3"
               ></textarea>
             </div>
-            <div className="mb-3"><input type="submit" value="Submit" /></div>
+            <div className="mb-3">
+              <input type="submit" value="Submit" />
+            </div>
           </form>
         </div>
       </div>
