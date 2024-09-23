@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import api from "../api";
+import Note from "../components/Note";
 
 export const Home = () => {
   const [author, setAuthor] = useState("");
@@ -34,13 +35,13 @@ export const Home = () => {
       .catch((error) => alert(error));
   };
 
-  const token = localStorage.getItem('ACCESS_TOKEN')
+  const token = localStorage.getItem("ACCESS_TOKEN");
   const config = {
-    headers :{
+    headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }
-  }
+      "Content-Type": "application/json",
+    },
+  };
   const createNote = (e) => {
     e.preventDefault();
     api
@@ -53,14 +54,14 @@ export const Home = () => {
         }
       })
       .catch((axioserror) => {
-        console.log(axioserror)
+        console.log(axioserror);
         if (axioserror.response) {
-          alert(axioserror.message + 'It is response')
+          alert(axioserror.message + "It is response");
         }
-        if (axioserror.request) { alert(axioserror.message + 'It is request')}
-      }
-      
-    );
+        if (axioserror.request) {
+          alert(axioserror.message + "It is request");
+        }
+      });
   };
 
   return (
@@ -70,6 +71,9 @@ export const Home = () => {
           <div className="col"></div>
           <div className="col">
             <h1>Notes</h1>
+            {notes.map((note) => (
+              <Note note={note} onDelete={deleteNote} key={note.id} />
+            ))}
           </div>
           <div className="col"></div>
         </div>
