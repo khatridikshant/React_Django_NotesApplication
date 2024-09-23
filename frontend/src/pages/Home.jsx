@@ -70,7 +70,6 @@ export const Home = () => {
         <div className="row">
           <div className="col"></div>
           <div className="col">
-            <h1>Notes</h1>
             {notes.map((note) => (
               <Note note={note} onDelete={deleteNote} key={note.id} />
             ))}

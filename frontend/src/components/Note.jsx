@@ -4,7 +4,7 @@ const Note = ({ note, onDelete }) => {
   const date = new Date(note.created_at).toLocaleDateString("en-US");
   return (
     <div>
-      <div className="row">Note</div>
+      <div className="row">Notes</div>
       <div className="row">
         <div class="card" style={{width: '18rem' }}>
           <img
